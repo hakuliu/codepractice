@@ -4,6 +4,7 @@ class NodeSingleLL:
     def __init__(self, data=None, nextnode=None):
         self.data = data
         self.nextnode = nextnode
+        return
 
     def getdata(self):
         return self.data
@@ -13,20 +14,23 @@ class NodeSingleLL:
 
     def setnext(self, nextnode):
         self.nextnode = nextnode
+        return
 
 class NodeDoubleLL(NodeSingleLL):
     '''
     using the same stuff from singly-linked nodes, so we only really need to code for the prev stuff.
     '''
     def __init__(self, data=None, nextnode=None, prevnode=None):
-        NodeSingleLL.__init__(data, nextnode)
+        super(NodeDoubleLL, self).__init__(data, nextnode)
         self.prevnode = prevnode
+        return
 
     def getprev(self):
         return self.prevnode
 
     def setprev(self, prevnode):
         self.prevnode = prevnode
+        return
 
 class LinkedListSingle:
     '''
@@ -38,12 +42,16 @@ class LinkedListSingle:
 
     I should add comparator for the data in case it's not a primative or something...for later.
     '''
-    def __init__(self, head=None):
-        self.head = head
+    def __init__(self, headdata=None):
+        self.head = None
+        if(headdata):
+            self.addnode(headdata)
+        return
 
     def addnode(self, data):
         newhead = NodeSingleLL(data, self.head)
         self.head = newhead
+        return
 
     def delnode(self, lookup):
         '''
@@ -84,3 +92,42 @@ class LinkedListSingle:
             return None
         self.head = rv.getnext()
         return rv
+
+    def peek(self):
+        return self.head
+
+    def isEmpty(self):
+        return self.head == None
+
+class LinkedListDouble(LinkedListSingle):
+    def __init__(self, headdata=None):
+        self.head = None
+        self.tail = None
+        if(headdata):
+            self.addnode(headdata)
+        return
+
+    def addnodefront(self, data):
+        if(data):
+            node = NodeDoubleLL(data,self.head,None)
+            if(self.head!=None):
+                self.head.setprev(node)
+            if(self.tail==None):
+                self.tail = node
+            self.head = node
+        else:
+            return None
+
+    def addnodeback(self, data):
+        if(data):
+            node = NodeDoubleLL(data,None,self.tail)
+            if(self.tail!=None):
+                self.tail.setnext(node)
+            if(self.head==None):
+                self.head = node
+            self.tail = node
+        else:
+            return None
+
+    def isEmpty(self):
+        return self.head==None
